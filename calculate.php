@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 if (count($argv) < 4) {
     die('Error: Too few arguments for script!');

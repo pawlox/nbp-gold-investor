@@ -72,7 +72,7 @@ class Investor
      * @param string $endDate   End date
      * @return array
      */
-    private function getGoldCostData(string $startDate, string $endDate): array
+    public function getGoldCostData(string $startDate, string $endDate): array
     {
         $dStart = new DateTime($startDate);
         $dEnd  = new DateTime($endDate);
@@ -116,7 +116,7 @@ class Investor
      * @param array $prices Dataset/array containing gold prices
      * @return array|mixed
      */
-    private function getBestProfit(array $prices)
+    public function getBestProfit(array $prices)
     {
         $length = count($prices);
 
@@ -148,13 +148,23 @@ class Investor
             return ($prev === null || $next->cena > $prev->cena) ? $next : $prev;
         });
 
-        $bothBest = [
-            'buyDate' => $leftMin->data,
-            'buyPrice' => $leftMin->cena,
-            'saleDate' => $rightMax->data,
-            'salePrice' => $rightMax->cena,
-            'finalProfit' => $rightMax->cena / $leftMin->cena
-        ];
+        if ($rightMax->cena > $leftMin->cena) {
+            $bothBest = [
+                'buyDate' => $leftMin->data,
+                'buyPrice' => $leftMin->cena,
+                'saleDate' => $rightMax->data,
+                'salePrice' => $rightMax->cena,
+                'finalProfit' => $rightMax->cena / $leftMin->cena
+            ];
+        } else {
+            $bothBest = [
+                'buyDate' => null,
+                'buyPrice' => null,
+                'saleDate' => null,
+                'salePrice' => null,
+                'finalProfit' => 0
+            ];
+        }
 
         // Choose the best profit from three results and return it
         $bestProfit = array_reduce([$leftBest, $rightBest, $bothBest], function ($first, $second) {
